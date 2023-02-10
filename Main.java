@@ -1,16 +1,6 @@
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
 import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.awt.Color;
-import java.awt.Toolkit;
-
 
 public class Main extends JFrame{
     Gui gui;
