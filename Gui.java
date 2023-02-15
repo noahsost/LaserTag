@@ -23,7 +23,7 @@ class Gui{
         this.frame.setVisible(true);
         try
 		{
-			Thread.sleep( 3000);
+			Thread.sleep(3000);
 		} catch(Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -86,6 +86,17 @@ class Gui{
         textAreaB.setEditable(false);
         this.frame.add(textAreaB, gbc);
 
+        JTextArea errorMessage = new JTextArea(1, 1); 
+        gbc.gridx = 1;
+        gbc.gridy = 2; 
+        gbc.gridheight = 1;
+        gbc.gridwidth = 2;
+        errorMessage.setBackground(new Color(110, 110, 110));
+        gbc.fill = GridBagConstraints.CENTER;
+        errorMessage.append("");
+        errorMessage.setEditable(false);
+        this.frame.add(errorMessage, gbc);
+
         //Makes everything in the frame visible
         this.frame.setVisible(true);
 
@@ -95,8 +106,17 @@ class Gui{
             public void actionPerformed(ActionEvent event) {
                 // records text in aString
                 String aString = textField.getText();
+
+                //shortens the string if it's longer than 24 characters; also adds error message
+                if (aString.length() > 24) {
+                    aString = aString.substring(0, 24);
+                    errorMessage.setText("Your input is too long. It has been shortened automatically.");
+                } else {
+                    errorMessage.setText("");
+                }
+
+                // moves text to Red team area if the string is not blank
                 if (!aString.isBlank()) {
-                    // moves text to Red team area if the string is not blank
                     textAreaR.append("\n"+aString);
                 }
                 // empties the text box
@@ -110,8 +130,17 @@ class Gui{
             public void actionPerformed(ActionEvent event) {
                 // records text in aString
                 String aString = textField.getText();
+
+                //shortens the string if it's longer than 24 characters; also adds error message
+                if (aString.length() > 24) {
+                    aString = aString.substring(0, 24);
+                    errorMessage.setText("Your input is too long. It has been shortened automatically.");
+                } else {
+                    errorMessage.setText("");
+                }   
+
+                // moves text to Blue team area if the string is not blank
                 if (!aString.isBlank()) {
-                    // moves text to Blue team area if the string is not blank
                     textAreaB.append("\n"+aString);
                 } 
                 // empties the text box
