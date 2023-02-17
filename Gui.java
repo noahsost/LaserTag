@@ -35,8 +35,17 @@ class Gui{
     void playerEntry(){
         GridBagConstraints gbc = new GridBagConstraints();
 
+        //Creates start game button and sets constraints
+        JButton startGame = new JButton("Start Game");
+        gbc.gridx = 1; 
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        this.frame.add(startGame, gbc);
+        
         //Creates red button and sets constraints; Also sets the button color to red
-        JButton redButton= new JButton("Red Team"); 
+        JButton redButton = new JButton("Red Team"); 
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -88,7 +97,7 @@ class Gui{
 
         JTextArea errorMessage = new JTextArea(1, 1); 
         gbc.gridx = 1;
-        gbc.gridy = 2; 
+        gbc.gridy = 3; 
         gbc.gridheight = 1;
         gbc.gridwidth = 2;
         errorMessage.setBackground(new Color(110, 110, 110));
@@ -137,12 +146,13 @@ class Gui{
                     errorMessage.setText("Your input is too long. It has been shortened automatically.");
                 } else {
                     errorMessage.setText("");
-                }   
-
+                }
+            
                 // moves text to Blue team area if the string is not blank
                 if (!aString.isBlank()) {
                     textAreaB.append("\n"+aString);
                 } 
+
                 // empties the text box
                 textField.setText(null);
             }
