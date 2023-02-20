@@ -1,10 +1,12 @@
-import javax.swing.JFrame;
-import java.awt.GridBagLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
+
+import javax.swing.JFrame;
 
 public class Main extends JFrame{
     Gui gui;
+    Database database = new Database();
 
     public Main(){
         this.setTitle("Photon");
@@ -13,7 +15,7 @@ public class Main extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(new Color(110, 110, 110));
         this.setLayout(new GridBagLayout());
-        gui = new Gui(this);
+        gui = new Gui(this, database);
         gui.run(); 
     }
 

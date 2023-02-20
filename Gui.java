@@ -1,20 +1,27 @@
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.Insets; 
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Color;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 
 class Gui{
     JFrame frame;
-    Gui(JFrame aFrame){
+    Database database;
+    Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
+        database = aDatabase;
     }
 
     void splashScreen(){
@@ -33,6 +40,7 @@ class Gui{
     }
 
     void playerEntry(){
+        
         GridBagConstraints gbc = new GridBagConstraints();
 
         //Creates start game button and sets constraints
@@ -113,20 +121,22 @@ class Gui{
             // when RedButton is pressed, the text in the text box is recorded and moved to the Red team
             @Override
             public void actionPerformed(ActionEvent event) {
-                // records text in aString
-                String aString = textField.getText();
+                // records text in inputID
+                String inputID = textField.getText();
+                int id = Integer.parseInt(inputID);
+                String codeName = database.getCodeName(id);
 
                 //shortens the string if it's longer than 24 characters; also adds error message
-                if (aString.length() > 24) {
-                    aString = aString.substring(0, 24);
+                if (codeName.length() > 24) {
+                    codeName = codeName.substring(0, 24);
                     errorMessage.setText("Your input is too long. It has been shortened automatically.");
                 } else {
                     errorMessage.setText("");
                 }
 
                 // moves text to Red team area if the string is not blank
-                if (!aString.isBlank()) {
-                    textAreaR.append("\n"+aString);
+                if (!codeName.isBlank()) {
+                    textAreaR.append("\n"+codeName);
                 }
                 // empties the text box
                 textField.setText(null);
@@ -137,22 +147,23 @@ class Gui{
             // when BlueButton is pressed, the text in the text box is recorded and moved to the Blue team
             @Override
             public void actionPerformed(ActionEvent event) {
-                // records text in aString
-                String aString = textField.getText();
+                // records text in inputID
+                String inputID = textField.getText();
+                int id = Integer.parseInt(inputID);
+                String codeName = database.getCodeName(id);
 
                 //shortens the string if it's longer than 24 characters; also adds error message
-                if (aString.length() > 24) {
-                    aString = aString.substring(0, 24);
+                if (codeName.length() > 24) {
+                    codeName = codeName.substring(0, 24);
                     errorMessage.setText("Your input is too long. It has been shortened automatically.");
                 } else {
                     errorMessage.setText("");
                 }
-            
-                // moves text to Blue team area if the string is not blank
-                if (!aString.isBlank()) {
-                    textAreaB.append("\n"+aString);
-                } 
 
+                // moves text to Red team area if the string is not blank
+                if (!codeName.isBlank()) {
+                    textAreaB.append("\n"+codeName);
+                }
                 // empties the text box
                 textField.setText(null);
             }
@@ -160,9 +171,80 @@ class Gui{
         return;
     }
 
+    void addNewPlayer(){
+
+        // creates new jPanel underneath start button
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(110, 110, 110));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel iDLabel = new JLabel("ID:");
+    
+        panel.add(iDLabel);
+        JTextField newIDField = new JTextField(20);
+        panel.add(newIDField);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        panel.add(new JLabel("First Name:"));
+        JTextField newFirstNameField = new JTextField(20);
+        panel.add(newFirstNameField);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        panel.add(new JLabel("Last Name:"));
+        JTextField newLastNameField = new JTextField(20);
+        panel.add(newLastNameField);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        panel.add(new JLabel("Codename:"));
+        JTextField newCodeNameField = new JTextField(20);
+        panel.add(newCodeNameField);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JButton addNewPlayerButton = new JButton("Add New Player");
+        
+        panel.add(addNewPlayerButton);
+
+        // adds jpanel to the jframe
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+
+        this.frame.add(panel, gbc);
+        
+        this.frame.setVisible(true);
+
+        // action listener for add new player button
+        addNewPlayerButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String id = newIDField.getText();
+                String firstName = newFirstNameField.getText();
+                String lastName = newLastNameField.getText();
+                String codeName = newCodeNameField.getText();
+                if(id.isBlank() || firstName.isBlank() || lastName.isBlank() || codeName.isBlank()){
+                    System.out.println("empty :(");
+                } else{
+                    database.addPlayer(id, firstName, lastName, codeName);
+                    newIDField.setText(null);
+                    newFirstNameField.setText(null);
+                    newLastNameField.setText(null);
+                    newCodeNameField.setText(null);
+                }
+            }
+        });
+
+
+    }
+
     void run(){
         this.splashScreen();
         this.playerEntry();
+        this.addNewPlayer();
     }
 
 }
