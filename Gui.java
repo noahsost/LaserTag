@@ -199,6 +199,17 @@ class Gui{
         return;
     }
 
+   //F5 Key being pressed.
+   void keyPressed(KeyEvent e)
+   {
+	int key = e.getKeyCode();
+	if (key == KeyEvent.F5)
+	{
+		frame.dispose();
+           	playerEntry();
+	}
+   }
+	
     void addNewPlayer(){
         // creates new jPanel underneath start button
         JPanel panel = new JPanel();
