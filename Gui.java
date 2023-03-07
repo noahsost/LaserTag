@@ -200,7 +200,7 @@ class Gui{
     }
 
    //F5 Key being pressed.
-   void keyPressed(KeyEvent e)
+   public void keyPressed(KeyEvent e)
    {
 	int key = e.getKeyCode();
 	if (key == KeyEvent.F5)
