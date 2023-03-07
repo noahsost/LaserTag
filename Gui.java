@@ -6,6 +6,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -21,6 +24,8 @@ class Gui{
     JFrame frame;
     Database database;
     Color BACKGROUND = new Color(200, 200, 200);
+    int interval = 30;
+    Timer timer;
 
     Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
@@ -262,6 +267,14 @@ class Gui{
 
     // Creates a new JFrame for the player action screen
     void playerActionScreen(JTextArea B, JTextArea R) {
+        
+        int delay = 1000;
+        int period = 1000;
+        timer = new Timer();
+        //interval = 30;
+
+
+
         JFrame action = new JFrame();
         action.setSize(1600, 900);
         action.setLayout(new GridBagLayout());
@@ -269,6 +282,24 @@ class Gui{
         action.add(B, gbc); //Copies over blue text area
         action.add(R, gbc); //Copies over red text area 
         action.setVisible(true);
+        String temp;
+        timer.scheduleAtFixedRate(new TimerTask() {
+
+            public void run() {
+                //interval--;
+                String temp = Integer.toString(setInterval());
+                B.setText(temp);
+                   
+            }
+        }, delay, period);
+    }
+
+    Integer setInterval()
+    {
+        if(interval == 0)
+        timer.cancel(); 
+
+        return interval--;
     }
 
     void run(){
