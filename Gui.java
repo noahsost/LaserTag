@@ -26,6 +26,7 @@ class Gui{
     Color BACKGROUND = new Color(200, 200, 200);
     int interval = 30;
     Timer timer;
+    int first = 1;
 
     Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
@@ -282,24 +283,38 @@ class Gui{
         action.add(B, gbc); //Copies over blue text area
         action.add(R, gbc); //Copies over red text area 
         action.setVisible(true);
-        String temp;
         timer.scheduleAtFixedRate(new TimerTask() {
 
             public void run() {
                 //interval--;
-                String temp = Integer.toString(setInterval());
+                int second;
+                int minute;
+                minute = getInterval()/60;
+                second = getInterval()%60;
+                setInterval1();
+                String temp = Integer.toString(minute)+ ":" +Integer.toString(second);
                 B.setText(temp);
                    
             }
         }, delay, period);
     }
 
-    Integer setInterval()
+    Integer setInterval1()
     {
-        if(interval == 0)
-        timer.cancel(); 
-
+        if(interval <= 0)
+        {
+        if(first == 1)
+        interval = 360;
+        else{
+        timer.cancel();
+        first = 0;
+        } 
+        }
         return interval--;
+    }
+    Integer getInterval()
+    {
+        return interval;
     }
 
     void run(){
