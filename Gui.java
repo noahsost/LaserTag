@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-class Gui{
+class Gui implements KeyListener{
     JFrame frame;
     Database database;
     Color BACKGROUND = new Color(200, 200, 200);
@@ -200,6 +202,19 @@ class Gui{
         return;
     }
 
+   //F5 Key being pressed.
+   public void keyTyped(KeyEvent e){}
+   public void keyPressed(KeyEvent e)
+   {
+	int key = e.getKeyCode();
+	if (key == KeyEvent.F5)
+	{
+		frame.dispose();
+           	playerEntry();
+	}
+   }
+   public void keyReleased(KeyEvent e){}
+	
     void addNewPlayer(){
         // creates new jPanel underneath start button
         JPanel panel = new JPanel();
