@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ import javax.swing.JTextField;
 class Gui{
     JFrame frame;
     Database database;
+    Color BACKGROUND = new Color(200, 200, 200);
+
     Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
         database = aDatabase;
@@ -46,16 +49,16 @@ class Gui{
         //Creates start game button and sets constraints
         JButton startGame = new JButton("Start Game");
         gbc.gridx = 1; 
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 0, 5, 0);
         this.frame.add(startGame, gbc);
         
         //Creates red button and sets constraints; Also sets the button color to red
         JButton redButton = new JButton("Red Team"); 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.insets = new Insets(0, 0, 10, 0);
@@ -65,17 +68,28 @@ class Gui{
         //Creates blue button and sets constraints; Also sets the button color to blue
         JButton blueButton= new JButton("Blue Team"); 
         gbc.gridx = 3;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.insets = new Insets(0, 0, 10, 0);
         blueButton.setBackground(new Color(79, 138, 196));
         this.frame.add(blueButton, gbc);
 
+        JTextArea enterID = new JTextArea(1, 1);
+        enterID.setText("Enter an existing ID and pick a team: ");
+        gbc.gridx = 1;
+        gbc.gridy = 0; 
+        gbc.gridheight = 1;
+        gbc.gridwidth = 2;
+        enterID.setBackground(BACKGROUND);
+        gbc.fill = GridBagConstraints.CENTER;
+        enterID.setEditable(false);
+        this.frame.add(enterID, gbc);
+
         //Creates textField where you can enter the player; sets all constraints for GUI
         JTextField textField = new JTextField(20);
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 2;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 10, 10, 10);
@@ -84,7 +98,7 @@ class Gui{
         //Creates textArea where the red team information is displayed; sets all constraints for GUI
         JTextArea textAreaR = new JTextArea(20,20);
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.CENTER;
@@ -95,7 +109,7 @@ class Gui{
         //Creates textArea where the blue team information is displayed; sets all constraints for GUI
         JTextArea textAreaB = new JTextArea(20,20);
         gbc.gridx = 2;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.CENTER;
@@ -105,10 +119,10 @@ class Gui{
 
         JTextArea errorMessage = new JTextArea(1, 1); 
         gbc.gridx = 1;
-        gbc.gridy = 3; 
+        gbc.gridy = 0; 
         gbc.gridheight = 1;
         gbc.gridwidth = 2;
-        errorMessage.setBackground(new Color(110, 110, 110));
+        errorMessage.setBackground(BACKGROUND);
         gbc.fill = GridBagConstraints.CENTER;
         errorMessage.append("");
         errorMessage.setEditable(false);
@@ -116,6 +130,15 @@ class Gui{
 
         //Makes everything in the frame visible
         this.frame.setVisible(true);
+
+        //Closes player entry screen and opens player action screen when start game is pressed
+        startGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                frame.dispose();
+                playerActionScreen(textAreaB, textAreaR);
+            }
+        });
 
         redButton.addActionListener(new ActionListener(){
             // when RedButton is pressed, the text in the text box is recorded and moved to the Red team
@@ -172,10 +195,9 @@ class Gui{
     }
 
     void addNewPlayer(){
-
         // creates new jPanel underneath start button
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(110, 110, 110));
+        panel.setBackground(BACKGROUND);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel iDLabel = new JLabel("ID:");
@@ -205,13 +227,12 @@ class Gui{
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JButton addNewPlayerButton = new JButton("Add New Player");
-        
         panel.add(addNewPlayerButton);
 
         // adds jpanel to the jframe
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
 
         this.frame.add(panel, gbc);
@@ -237,8 +258,17 @@ class Gui{
                 }
             }
         });
+    }
 
-
+    // Creates a new JFrame for the player action screen
+    void playerActionScreen(JTextArea B, JTextArea R) {
+        JFrame action = new JFrame();
+        action.setSize(1600, 900);
+        action.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        action.add(B, gbc); //Copies over blue text area
+        action.add(R, gbc); //Copies over red text area 
+        action.setVisible(true);
     }
 
     void run(){
@@ -246,5 +276,4 @@ class Gui{
         this.playerEntry();
         this.addNewPlayer();
     }
-
 }
