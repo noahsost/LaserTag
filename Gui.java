@@ -7,7 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,6 +30,8 @@ class Gui implements KeyListener{
     int interval = 30;
     Timer timer;
     int first = 1;
+    List<Player> redTeam = new ArrayList();
+    List<Player> blueTeam = new ArrayList();
 
     Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
@@ -155,7 +158,9 @@ class Gui implements KeyListener{
                 // records text in inputID
                 String inputID = textField.getText();
                 int id = Integer.parseInt(inputID);
-                String codeName = database.getCodeName(id);
+                Player aPlayer = database.getExistingPlayer(id);
+                String codeName = aPlayer.codeName;
+                redTeam.add(aPlayer); 
 
                 //shortens the string if it's longer than 24 characters; also adds error message
                 if (codeName.length() > 24) {
@@ -181,7 +186,9 @@ class Gui implements KeyListener{
                 // records text in inputID
                 String inputID = textField.getText();
                 int id = Integer.parseInt(inputID);
-                String codeName = database.getCodeName(id);
+                Player aPlayer = database.getExistingPlayer(id);
+                String codeName = aPlayer.codeName;
+                blueTeam.add(aPlayer); 
 
                 //shortens the string if it's longer than 24 characters; also adds error message
                 if (codeName.length() > 24) {
@@ -207,7 +214,7 @@ class Gui implements KeyListener{
    public void keyPressed(KeyEvent e)
    {
 	int key = e.getKeyCode();
-	if (key == KeyEvent.F5)
+	if (key == KeyEvent.VK_F5)
 	{
 		frame.dispose();
            	playerEntry();

@@ -21,10 +21,9 @@ public class Database {
         } catch (Exception sQLException){
             System.out.println("SQL Exception");
         }
-
     }
 
-    void addPlayer(String id, String firstName, String lastName, String codeName){
+    Player addPlayer(String id, String firstName, String lastName, String codeName){
         try{
             Statement statement = connect.createStatement();
 
@@ -47,23 +46,25 @@ public class Database {
         } catch(Exception SQLException){
             System.out.println("SQL Exception");
         }
+        
+        return new Player(Integer.parseInt(id), firstName, lastName, codeName);
     }
 
-    String getCodeName(int id){
-        String codeName = null;
+    Player getExistingPlayer(int id){
+        String firstName = null, lastName = null, codeName = null;
         try{
             Statement statement = connect.createStatement();
-            String sql = "SELECT codename FROM player WHERE id=" + id;
+            String sql = "SELECT * FROM player WHERE id=" + id;
             ResultSet rs = statement.executeQuery(sql);
-
             rs.next();
+            firstName = rs.getString("first_name");
+            lastName = rs.getString("last_name");
             codeName = rs.getString("codename");
-
-        } catch(Exception sQLException){
-            System.out.println("Error getting codename");
+        } catch (Exception sQLException){
+            System.out.println("Error getting player details");
         }
 
-        return codeName;
+        return new Player(id, firstName, lastName, codeName);
     }
 
 
