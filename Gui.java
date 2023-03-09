@@ -23,7 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-class Gui implements KeyListener{
+class Gui implements KeyListener {
     JFrame frame;
     Database database;
     Color BACKGROUND = new Color(200, 200, 200);
@@ -53,8 +53,7 @@ class Gui implements KeyListener{
         return;
     }
 
-    void playerEntry(){
-        
+    void playerEntry(){      
         GridBagConstraints gbc = new GridBagConstraints();
 
         //Creates start game button and sets constraints
@@ -209,17 +208,19 @@ class Gui implements KeyListener{
         return;
     }
 
-   //F5 Key being pressed.
+    //F5 Key being pressed.
    public void keyTyped(KeyEvent e){}
    public void keyPressed(KeyEvent e)
    {
 	int key = e.getKeyCode();
 	if (key == KeyEvent.VK_F5)
 	{
-		frame.dispose();
-           	playerEntry();
+        System.out.println("test");
+		//frame.dispose();
+        //playerActionScreen();
 	}
    }
+
    public void keyReleased(KeyEvent e){}
 	
     void addNewPlayer(){
@@ -290,21 +291,33 @@ class Gui implements KeyListener{
 
     // Creates a new JFrame for the player action screen
     void playerActionScreen(JTextArea B, JTextArea R) {
+        JFrame action = new JFrame();
+        action.setSize(1600, 900);
+        action.setLayout(new GridBagLayout());
+        action.setMinimumSize(new Dimension(1000, 700));
+        action.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        action.getContentPane().setBackground(new Color(200, 200, 200));
+        GridBagConstraints gbc = new GridBagConstraints();
         
         int delay = 1000;
         int period = 1000;
         timer = new Timer();
         //interval = 30;
 
-
-
-        JFrame action = new JFrame();
-        action.setSize(1600, 900);
-        action.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
         action.add(B, gbc); //Copies over blue text area
         action.add(R, gbc); //Copies over red text area 
         action.setVisible(true);
+
+        //Displays the timer at the bottom of the page
+        JTextField timerDisplay = new JTextField(5);
+        gbc.gridx = 0; 
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        timerDisplay.setEditable(false);
+        action.add(timerDisplay, gbc);
+
         timer.scheduleAtFixedRate(new TimerTask() {
 
             public void run() {
@@ -315,7 +328,7 @@ class Gui implements KeyListener{
                 second = getInterval()%60;
                 setInterval1();
                 String temp = Integer.toString(minute)+ ":" +Integer.toString(second);
-                B.setText(temp);
+                timerDisplay.setText(temp);
                    
             }
         }, delay, period);

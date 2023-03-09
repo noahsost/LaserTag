@@ -1,7 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 
 public class Main extends JFrame{
@@ -11,7 +12,7 @@ public class Main extends JFrame{
     public Main(){
         this.setTitle("Photon");
         this.setSize(1600, 900);
-        this.setMinimumSize(new Dimension(800, 450));
+        this.setMinimumSize(new Dimension(1000, 700));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(new Color(200, 200, 200));
         this.setLayout(new GridBagLayout());
