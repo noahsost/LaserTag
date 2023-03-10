@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -23,7 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-class Gui implements KeyListener {
+class Gui {
     JFrame frame;
     Database database;
     Color BACKGROUND = new Color(200, 200, 200);
@@ -223,21 +222,6 @@ class Gui implements KeyListener {
         return;
     }
 
-    //F5 Key being pressed.
-   public void keyTyped(KeyEvent e){}
-   public void keyPressed(KeyEvent e)
-   {
-	int key = e.getKeyCode();
-	if (key == KeyEvent.VK_F5)
-	{
-        System.out.println("test");
-		//frame.dispose();
-        //playerActionScreen();
-	}
-   }
-
-   public void keyReleased(KeyEvent e){}
-	
     void addNewPlayer(){
         // creates new jPanel underneath start button
         JPanel panel = new JPanel();
@@ -312,8 +296,8 @@ class Gui implements KeyListener {
         action.setMinimumSize(new Dimension(1000, 700));
         action.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         action.getContentPane().setBackground(new Color(200, 200, 200));
-        GridBagConstraints gbc = new GridBagConstraints();
 
+        GridBagConstraints gbc = new GridBagConstraints();
         action.setVisible(true);
 
         //Defines panels
@@ -329,7 +313,7 @@ class Gui implements KeyListener {
         }
         panelBase(redPanel, "", redText, 8);
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.CENTER;
         action.add(redPanel, gbc);
@@ -346,7 +330,7 @@ class Gui implements KeyListener {
         }
         panelBase(red, "", redText, 20);
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.CENTER;
         action.add(red, gbc);
@@ -357,8 +341,8 @@ class Gui implements KeyListener {
             panelBase(bluePanel, "", scoreText, 8);
         }
         panelBase(bluePanel, "", blueText, 8);
-        gbc.gridx = 5;
-        gbc.gridy = 0;
+        gbc.gridx = 3;
+        gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.CENTER;
         action.add(bluePanel, gbc);
@@ -374,18 +358,30 @@ class Gui implements KeyListener {
             }
         }
         panelBase(blue, "", blueText, 20);
-        gbc.gridx = 4;
-        gbc.gridy = 0;
+        gbc.gridx = 2;
+        gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.CENTER;
         action.add(blue, gbc);
 
+        //Says when the game is starting
+        JTextArea gameStartText = new JTextArea(1, 10);
+        gameStartText.setBackground(BACKGROUND);
+        gbc.gridx = 1; 
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.CENTER;
+        gameStartText.setText("   Game starting in: ");
+        gbc.insets = new Insets(5, 0, 5, 0);
+        gameStartText.setEditable(false);
+        action.add(gameStartText, gbc);
+
         //Displays the timer at the bottom of the page
         JTextField timerDisplay = new JTextField(5);
-        gbc.gridx = 2; 
-        gbc.gridy = 4;
+        gbc.gridx = 1; 
+        gbc.gridy = 1;
         gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.CENTER;
         gbc.insets = new Insets(5, 0, 5, 0);
         timerDisplay.setEditable(false);
         action.add(timerDisplay, gbc);
@@ -403,7 +399,7 @@ class Gui implements KeyListener {
                 int minute;
                 minute = getInterval()/60;
                 second = getInterval()%60;
-                setInterval1();
+                setInterval1(gameStartText);
                 String temp = Integer.toString(minute)+ ":" +Integer.toString(second);
                 if (second <= 9) {
                     temp = Integer.toString(minute)+ ":0" +Integer.toString(second);
@@ -413,18 +409,17 @@ class Gui implements KeyListener {
         }, delay, period);
     }
 
-    Integer setInterval1()
+    Integer setInterval1(JTextArea text)
     {
         if(interval <= 0)
         {
-        if(first == 1)
-        {
-        interval = 360;
-        first = 0;
-        }
-        else{
-        timer.cancel();
-        } 
+            text.setText("   Time remaining: ");
+            if(first == 1) {
+                interval = 360;
+                first = 0;
+            } else {
+            timer.cancel();
+            } 
         }
         return interval--;
     }
