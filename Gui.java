@@ -27,6 +27,9 @@ class Gui implements KeyListener {
     JFrame frame;
     Database database;
     Color BACKGROUND = new Color(200, 200, 200);
+    Color redText = new Color(210, 96, 96);
+    Color blueText = new Color(79, 138, 196);
+    Color scoreText = new Color(255, 255, 255);
     int interval = 30;
     Timer timer;
     int first = 1;
@@ -51,6 +54,18 @@ class Gui implements KeyListener {
 		}
         splash.setVisible(false);
         return;
+    }
+
+    void panelBase(JPanel panel, String input, Color color, int columns) {
+        panel.setBackground(BACKGROUND);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel());
+        JTextField textField = new JTextField(columns);
+        textField.setBackground(color);
+        textField.setEditable(false);
+        textField.setText(input);
+        panel.add(textField);
+        panel.add(Box.createRigidArea(new Dimension(0, 0)));
     }
 
     void playerEntry(){      
@@ -146,7 +161,7 @@ class Gui implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent event) {
                 frame.dispose();
-                playerActionScreen(textAreaB, textAreaR);
+                playerActionScreen();
             }
         });
 
@@ -158,8 +173,7 @@ class Gui implements KeyListener {
                 String inputID = textField.getText();
                 int id = Integer.parseInt(inputID);
                 Player aPlayer = database.getExistingPlayer(id);
-                String codeName = aPlayer.codeName;
-                redTeam.add(aPlayer); 
+                String codeName = aPlayer.codeName; 
 
                 //shortens the string if it's longer than 24 characters; also adds error message
                 if (codeName.length() > 24) {
@@ -172,6 +186,7 @@ class Gui implements KeyListener {
                 // moves text to Red team area if the string is not blank
                 if (!codeName.isBlank()) {
                     textAreaR.append("\n"+codeName);
+                    redTeam.add(aPlayer);
                 }
                 // empties the text box
                 textField.setText(null);
@@ -187,7 +202,6 @@ class Gui implements KeyListener {
                 int id = Integer.parseInt(inputID);
                 Player aPlayer = database.getExistingPlayer(id);
                 String codeName = aPlayer.codeName;
-                blueTeam.add(aPlayer); 
 
                 //shortens the string if it's longer than 24 characters; also adds error message
                 if (codeName.length() > 24) {
@@ -200,6 +214,7 @@ class Gui implements KeyListener {
                 // moves text to Red team area if the string is not blank
                 if (!codeName.isBlank()) {
                     textAreaB.append("\n"+codeName);
+                    blueTeam.add(aPlayer); 
                 }
                 // empties the text box
                 textField.setText(null);
@@ -290,7 +305,7 @@ class Gui implements KeyListener {
     }
 
     // Creates a new JFrame for the player action screen
-    void playerActionScreen(JTextArea B, JTextArea R) {
+    void playerActionScreen() {
         JFrame action = new JFrame();
         action.setSize(1600, 900);
         action.setLayout(new GridBagLayout());
@@ -298,28 +313,90 @@ class Gui implements KeyListener {
         action.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         action.getContentPane().setBackground(new Color(200, 200, 200));
         GridBagConstraints gbc = new GridBagConstraints();
-        
+
+        action.setVisible(true);
+
+        //Defines panels
+        JPanel redPanel = new JPanel();
+        JPanel bluePanel = new JPanel();
+        JPanel red = new JPanel();
+        JPanel blue = new JPanel();
+
+        //Displays score for red team
+        panelBase(redPanel, "Red Score", redText, 8);
+        for (int i = 0; i < 15; i++) {
+            panelBase(redPanel, "", scoreText, 8);
+        }
+        panelBase(redPanel, "", redText, 8);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        action.add(redPanel, gbc);
+
+        //Displays red team
+        panelBase(red, "Red Team", redText, 20);
+        for (int i = 0; i < 15; i++) {
+            boolean inBounds = (i >= 0) && (i < redTeam.size());
+            if (!inBounds) {
+                panelBase(red, "", scoreText, 20);
+            } else {
+                panelBase(red, redTeam.get(i).codeName, scoreText, 20);
+            }
+        }
+        panelBase(red, "", redText, 20);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        action.add(red, gbc);
+
+        //Displays score for blue team
+        panelBase(bluePanel, "Blue Score", blueText, 8);
+        for (int i = 0; i < 15; i++) {
+            panelBase(bluePanel, "", scoreText, 8);
+        }
+        panelBase(bluePanel, "", blueText, 8);
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        action.add(bluePanel, gbc);
+
+        //Displayes blue team
+        panelBase(blue, "Blue Team", blueText, 20);
+        for (int i = 0; i < 15; i++) { 
+            boolean inBounds = (i >= 0) && (i < blueTeam.size());
+            if (!inBounds) {
+                panelBase(blue, "", scoreText, 20);
+            } else {
+                panelBase(blue, blueTeam.get(i).codeName, scoreText, 20);
+            }
+        }
+        panelBase(blue, "", blueText, 20);
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        action.add(blue, gbc);
+
+        //Displays the timer at the bottom of the page
+        JTextField timerDisplay = new JTextField(5);
+        gbc.gridx = 2; 
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        timerDisplay.setEditable(false);
+        action.add(timerDisplay, gbc);
+
         int delay = 1000;
         int period = 1000;
         timer = new Timer();
         //interval = 30;
 
-        action.add(B, gbc); //Copies over blue text area
-        action.add(R, gbc); //Copies over red text area 
-        action.setVisible(true);
-
-        //Displays the timer at the bottom of the page
-        JTextField timerDisplay = new JTextField(5);
-        gbc.gridx = 0; 
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(5, 0, 5, 0);
-        timerDisplay.setEditable(false);
-        action.add(timerDisplay, gbc);
-
+        //Sets timer
         timer.scheduleAtFixedRate(new TimerTask() {
-
             public void run() {
                 //interval--;
                 int second;
@@ -328,8 +405,10 @@ class Gui implements KeyListener {
                 second = getInterval()%60;
                 setInterval1();
                 String temp = Integer.toString(minute)+ ":" +Integer.toString(second);
+                if (second <= 9) {
+                    temp = Integer.toString(minute)+ ":0" +Integer.toString(second);
+                }
                 timerDisplay.setText(temp);
-                   
             }
         }, delay, period);
     }
@@ -339,10 +418,12 @@ class Gui implements KeyListener {
         if(interval <= 0)
         {
         if(first == 1)
+        {
         interval = 360;
+        first = 0;
+        }
         else{
         timer.cancel();
-        first = 0;
         } 
         }
         return interval--;
