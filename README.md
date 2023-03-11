@@ -9,6 +9,6 @@ For any other IDEs, you will have to research how to reference a .jar file.
 
 # Test IDs
 The following IDs are already in the database, you may use them for testing purposes:
-    * 777
-    * 17
-    * 72
+* 777
+* 17
+* 72
