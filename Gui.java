@@ -5,7 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +65,22 @@ class Gui {
         textField.setText(input);
         panel.add(textField);
         panel.add(Box.createRigidArea(new Dimension(0, 0)));
+        
     }
 
     void playerEntry(){      
         GridBagConstraints gbc = new GridBagConstraints();
+
+        frame.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+              int keyCode = e.getKeyCode();
+              if (keyCode == KeyEvent.VK_F5) {
+                frame.dispose();
+                playerActionScreen();
+              }
+            }
+          });
+        
 
         //Creates start game button and sets constraints
         JButton startGame = new JButton("Start Game");
