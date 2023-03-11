@@ -5,12 +5,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -18,8 +18,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.JComponent;
 
 
 class Gui {
@@ -34,6 +37,7 @@ class Gui {
     int first = 1;
     List<Player> redTeam = new ArrayList();
     List<Player> blueTeam = new ArrayList();
+    Action f5 = new F5();
 
     Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
@@ -55,6 +59,7 @@ class Gui {
         return;
     }
 
+    // Creates a basic panel (used to make the GUI for the player ation screen)
     void panelBase(JPanel panel, String input, Color color, int columns) {
         panel.setBackground(BACKGROUND);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -69,18 +74,7 @@ class Gui {
     }
 
     void playerEntry(){      
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        frame.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-              int keyCode = e.getKeyCode();
-              if (keyCode == KeyEvent.VK_F5) {
-                frame.dispose();
-                playerActionScreen();
-              }
-            }
-          });
-        
+        GridBagConstraints gbc = new GridBagConstraints();  
 
         //Creates start game button and sets constraints
         JButton startGame = new JButton("Start Game");
@@ -111,8 +105,9 @@ class Gui {
         blueButton.setBackground(new Color(79, 138, 196));
         this.frame.add(blueButton, gbc);
 
+        //Explains how to pick a team
         JTextArea enterID = new JTextArea(1, 1);
-        enterID.setText("Enter an existing ID and pick a team: ");
+        enterID.setText("Enter an existing ID and pick a team using the red and blue buttons: ");
         gbc.gridx = 1;
         gbc.gridy = 0; 
         gbc.gridheight = 1;
@@ -164,9 +159,6 @@ class Gui {
         errorMessage.setEditable(false);
         this.frame.add(errorMessage, gbc);
 
-        //Makes everything in the frame visible
-        this.frame.setVisible(true);
-
         //Closes player entry screen and opens player action screen when start game is pressed
         startGame.addActionListener(new ActionListener() {
             @Override
@@ -175,6 +167,11 @@ class Gui {
                 playerActionScreen();
             }
         });
+
+        //Opens player action screen when F5 is pressed
+        JRootPane rootPane = frame.getRootPane();
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "myAction");
+        rootPane.getActionMap().put("myAction", f5);
 
         redButton.addActionListener(new ActionListener(){
             // when RedButton is pressed, the text in the text box is recorded and moved to the Red team
@@ -231,8 +228,20 @@ class Gui {
                 textField.setText(null);
             }
         });
+
+        //Makes everything in the frame visible
+        this.frame.setVisible(true);
+
         return;
     }
+
+    //Defines action class for key binding
+    public class F5 extends AbstractAction {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			playerActionScreen();
+		}		
+	}
 
     void addNewPlayer(){
         // creates new jPanel underneath start button
