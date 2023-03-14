@@ -1,9 +1,4 @@
-@echo off
-javac Main.java Gui.java Database.java Player.java
-if %errorlevel% neq 0 (
-	echo There was an error; exiting now.	
-) else (
-	echo Compiled correctly!  Running Game...
-	java Main
-)
-cmd /k
+javac src/*.java -d bin/
+cd bin
+java -cp .;..\lib\postgresql-42.5.4.jar Main
+cd ..

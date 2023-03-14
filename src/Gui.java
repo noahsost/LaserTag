@@ -45,7 +45,7 @@ class Gui {
     }
 
     void splashScreen(){
-        JLabel splash = new JLabel(new ImageIcon("logo_resized.jpg"));
+        JLabel splash = new JLabel(new ImageIcon("../resources/logo_resized.jpg"));
         this.frame.add(splash);
         this.frame.setVisible(true);
         try
