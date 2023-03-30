@@ -47,7 +47,7 @@ public class Database {
             System.out.println("SQL Exception");
         }
         
-        return new Player(Integer.parseInt(id), firstName, lastName, codeName);
+        return new Player(Integer.parseInt(id), codeName);
     }
 
     Player getExistingPlayer(int id){
@@ -64,7 +64,7 @@ public class Database {
             System.out.println("Error getting player details");
         }
 
-        return new Player(id, firstName, lastName, codeName);
+        return new Player(id, codeName);
     }
 
 

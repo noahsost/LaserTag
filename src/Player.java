@@ -1,10 +1,27 @@
 public class Player {
-    int id, score;
-    String firstName, lastName, codeName;
-    Player(int idNum, String first, String last, String code){
+    private int id, score;
+    private String codeName;
+
+    Player(int idNum, String code){
         id = idNum;
-        firstName = first;
-        lastName = last;
+        score = 0;
         codeName = code;
+    }
+
+    int updateScore(){
+        // score increments by 10
+        return this.score += 10;
+    }
+
+    int getScore(){
+        return this.score;
+    }
+
+    int getID(){
+        return this.id;
+    }
+
+    String getCodeName(){
+        return this.codeName;
     }
 }

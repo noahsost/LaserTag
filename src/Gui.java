@@ -35,8 +35,8 @@ class Gui {
     int interval = 30;
     Timer timer;
     int first = 1;
-    List<Player> redTeam = new ArrayList();
-    List<Player> blueTeam = new ArrayList();
+    List<Player> redTeam = new ArrayList<Player>();
+    List<Player> blueTeam = new ArrayList<Player>();
     Action f5 = new F5();
 
     Gui(JFrame aFrame, Database aDatabase){
@@ -181,7 +181,7 @@ class Gui {
                 String inputID = textField.getText();
                 int id = Integer.parseInt(inputID);
                 Player aPlayer = database.getExistingPlayer(id);
-                String codeName = aPlayer.codeName; 
+                String codeName = aPlayer.getCodeName(); 
 
                 //shortens the string if it's longer than 24 characters; also adds error message
                 if (codeName.length() > 24) {
@@ -209,7 +209,7 @@ class Gui {
                 String inputID = textField.getText();
                 int id = Integer.parseInt(inputID);
                 Player aPlayer = database.getExistingPlayer(id);
-                String codeName = aPlayer.codeName;
+                String codeName = aPlayer.getCodeName();
 
                 //shortens the string if it's longer than 24 characters; also adds error message
                 if (codeName.length() > 24) {
@@ -346,7 +346,7 @@ class Gui {
             if (!inBounds) {
                 panelBase(red, "", scoreText, 20);
             } else {
-                panelBase(red, redTeam.get(i).codeName, scoreText, 20);
+                panelBase(red, redTeam.get(i).getCodeName(), scoreText, 20);
             }
         }
         panelBase(red, "", redText, 20);
@@ -375,7 +375,7 @@ class Gui {
             if (!inBounds) {
                 panelBase(blue, "", scoreText, 20);
             } else {
-                panelBase(blue, blueTeam.get(i).codeName, scoreText, 20);
+                panelBase(blue, blueTeam.get(i).getCodeName(), scoreText, 20);
             }
         }
         panelBase(blue, "", blueText, 20);

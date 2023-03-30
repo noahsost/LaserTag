@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 public class Main extends JFrame{
     Gui gui;
     Database database = new Database();
+    Server server = new Server();
 
     public Main(){
         this.setTitle("Photon");
@@ -17,6 +18,7 @@ public class Main extends JFrame{
         this.setLayout(new GridBagLayout());
         gui = new Gui(this, database);
         gui.run(); 
+        server.run();
     }
 
     public static void main(String[] args){
