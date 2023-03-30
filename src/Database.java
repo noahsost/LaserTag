@@ -51,14 +51,12 @@ public class Database {
     }
 
     Player getExistingPlayer(int id){
-        String firstName = null, lastName = null, codeName = null;
+        String codeName = null;
         try{
             Statement statement = connect.createStatement();
             String sql = "SELECT * FROM player WHERE id=" + id;
             ResultSet rs = statement.executeQuery(sql);
             rs.next();
-            firstName = rs.getString("first_name");
-            lastName = rs.getString("last_name");
             codeName = rs.getString("codename");
         } catch (Exception sQLException){
             System.out.println("Error getting player details");
