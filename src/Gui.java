@@ -70,16 +70,17 @@ class Gui {
         textField.setText(input);
         panel.add(textField);
         panel.add(Box.createRigidArea(new Dimension(0, 0)));
-        
     }
 
     void playerEntry(){      
         GridBagConstraints gbc = new GridBagConstraints();  
+        JPanel red = new JPanel();
+        JPanel blue = new JPanel();
 
         //Creates start game button and sets constraints
         JButton startGame = new JButton("Start Game");
         gbc.gridx = 1; 
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 0, 5, 0);
@@ -88,7 +89,7 @@ class Gui {
         //Creates red button and sets constraints; Also sets the button color to red
         JButton redButton = new JButton("Red Team"); 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.insets = new Insets(0, 0, 10, 0);
@@ -98,7 +99,7 @@ class Gui {
         //Creates blue button and sets constraints; Also sets the button color to blue
         JButton blueButton= new JButton("Blue Team"); 
         gbc.gridx = 3;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.insets = new Insets(0, 0, 10, 0);
@@ -109,7 +110,7 @@ class Gui {
         JTextArea enterID = new JTextArea(1, 1);
         enterID.setText("Enter an existing ID and pick a team using the red and blue buttons: ");
         gbc.gridx = 1;
-        gbc.gridy = 0; 
+        gbc.gridy = 1; 
         gbc.gridheight = 1;
         gbc.gridwidth = 2;
         enterID.setBackground(BACKGROUND);
@@ -120,34 +121,63 @@ class Gui {
         //Creates textField where you can enter the player; sets all constraints for GUI
         JTextField textField = new JTextField(20);
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 10, 10, 10);
         this.frame.add(textField, gbc);
 
-        //Creates textArea where the red team information is displayed; sets all constraints for GUI
-        JTextArea textAreaR = new JTextArea(20,20);
+        //Displays red team
+        JTextField[] redFields = new JTextField[15];
+        panelBase(red, "Red Team", redText, 20);
+        for (int i = 0; i < 15; i++) {
+            redFields[i] = new JTextField(20);
+            boolean inBounds = (i >= 0) && (i < redTeam.size());
+            if (!inBounds) {
+                red.setBackground(BACKGROUND);
+                red.setLayout(new BoxLayout(red, BoxLayout.Y_AXIS));
+                red.add(new JLabel());
+                redFields[i] = new JTextField(20);
+                redFields[i].setBackground(scoreText);
+                redFields[i].setEditable(false);
+                redFields[i].setText("");
+                red.add(redFields[i]);
+                red.add(Box.createRigidArea(new Dimension(0, 0)));
+            }
+        }
+        panelBase(red, "", redText, 20);
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
-        gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.CENTER;
-        textAreaR.append("RED TEAM");
-        textAreaR.setEditable(false);
-        this.frame.add(textAreaR, gbc);
+        this.frame.add(red, gbc);
 
-        //Creates textArea where the blue team information is displayed; sets all constraints for GUI
-        JTextArea textAreaB = new JTextArea(20,20);
+        //Displays blue team
+        JTextField[] blueFields = new JTextField[15];
+        panelBase(blue, "Blue Team", blueText, 20);
+        for (int i = 0; i < 15; i++) {
+            blueFields[i] = new JTextField(20);
+            boolean inBounds = (i >= 0) && (i < blueTeam.size());
+            if (!inBounds) {
+                blue.setBackground(BACKGROUND);
+                blue.setLayout(new BoxLayout(blue, BoxLayout.Y_AXIS));
+                blue.add(new JLabel());
+                blueFields[i] = new JTextField(20);
+                blueFields[i].setBackground(scoreText);
+                blueFields[i].setEditable(false);
+                blueFields[i].setText("");
+                blue.add(blueFields[i]);
+                blue.add(Box.createRigidArea(new Dimension(0, 0)));
+            }
+        }
+        panelBase(blue, "", blueText, 20);
         gbc.gridx = 2;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
-        gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.CENTER;
-        textAreaB.append("BLUE TEAM");
-        textAreaB.setEditable(false);
-        this.frame.add(textAreaB, gbc);
+        this.frame.add(blue, gbc);
 
+        //Error message
         JTextArea errorMessage = new JTextArea(1, 1); 
         gbc.gridx = 1;
         gbc.gridy = 0; 
@@ -193,8 +223,17 @@ class Gui {
 
                 // moves text to Red team area if the string is not blank
                 if (!codeName.isBlank()) {
-                    textAreaR.append("\n"+codeName);
-                    redTeam.add(aPlayer);
+                    for (int i = 0; i < redFields.length; i++) {
+                        // check if the field is empty
+                        if (redFields[i].getText().equals(codeName) || blueFields[i].getText().equals(codeName)) {
+                            errorMessage.setText("Codename already in use.");
+                            break;
+                        } else if (redFields[i].getText().isEmpty()) {
+                            redTeam.add(aPlayer);
+                            redFields[i].setText(codeName);
+                            break;
+                        } 
+                    }
                 }
                 // empties the text box
                 textField.setText(null);
@@ -221,8 +260,17 @@ class Gui {
 
                 // moves text to Red team area if the string is not blank
                 if (!codeName.isBlank()) {
-                    textAreaB.append("\n"+codeName);
-                    blueTeam.add(aPlayer); 
+                    for (int i = 0; i < blueFields.length; i++) {
+                        // check if the field is empty
+                        if (redFields[i].getText().equals(codeName) || blueFields[i].getText().equals(codeName)) {
+                            errorMessage.setText("Codename already in use.");
+                            break;
+                        } else if (blueFields[i].getText().isEmpty()) {
+                            blueTeam.add(aPlayer);
+                            blueFields[i].setText(codeName);
+                            break;
+                        } 
+                    }
                 }
                 // empties the text box
                 textField.setText(null);
@@ -281,7 +329,7 @@ class Gui {
         // adds jpanel to the jframe
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
 
         this.frame.add(panel, gbc);
@@ -368,7 +416,7 @@ class Gui {
         gbc.fill = GridBagConstraints.CENTER;
         action.add(bluePanel, gbc);
 
-        //Displayes blue team
+        //Displays blue team
         panelBase(blue, "Blue Team", blueText, 20);
         for (int i = 0; i < 15; i++) { 
             boolean inBounds = (i >= 0) && (i < blueTeam.size());
