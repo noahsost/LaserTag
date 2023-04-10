@@ -23,11 +23,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.JComponent;
+import java.io.*;
 
+import javax.sound.sampled.*;
 
 class Gui {
     JFrame frame;
     Database database;
+    private String pathToClip = "C:/Users/Spencer/Documents/GitHub/LaserTag/src/wav_files/hal.wav";
+    private Clip clip;
     Color BACKGROUND = new Color(200, 200, 200);
     Color redText = new Color(210, 96, 96);
     Color blueText = new Color(79, 138, 196);
@@ -42,6 +46,30 @@ class Gui {
     Gui(JFrame aFrame, Database aDatabase){
         frame = aFrame;
         database = aDatabase;
+    }
+
+    void playMusic(){
+        try{
+        File file = new File(pathToClip);
+        AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
+        clip = AudioSystem.getClip();
+        clip.open(audioIn);
+        clip.setFramePosition(0);
+        clip.start();
+        }
+        catch (UnsupportedAudioFileException e) {
+            //soundLoaded = false; 
+            e.printStackTrace();
+         } 
+         catch (IOException e) {
+            //soundLoaded = false; 
+            e.printStackTrace();
+         } 
+         catch (LineUnavailableException e) {
+            //soundLoaded = false; 
+            e.printStackTrace();
+         }
+   
     }
 
     void splashScreen(){
@@ -498,6 +526,7 @@ class Gui {
     }
 
     void run(){
+        //this.playMusic();
         this.splashScreen();
         this.playerEntry();
         this.addNewPlayer();
