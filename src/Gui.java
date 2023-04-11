@@ -100,6 +100,16 @@ class Gui {
         panel.add(Box.createRigidArea(new Dimension(0, 0)));
     }
 
+    void panelBaseArray(JPanel panel, String input, Color color, JTextField textField) {
+        panel.setBackground(BACKGROUND);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel());
+        textField.setBackground(color);
+        textField.setEditable(false);
+        panel.add(textField);
+        panel.add(Box.createRigidArea(new Dimension(0, 0)));
+    }
+
     void playerEntry(){      
         GridBagConstraints gbc = new GridBagConstraints();  
         JPanel red = new JPanel();
@@ -162,15 +172,7 @@ class Gui {
             redFields[i] = new JTextField(20);
             boolean inBounds = (i >= 0) && (i < redTeam.size());
             if (!inBounds) {
-                red.setBackground(BACKGROUND);
-                red.setLayout(new BoxLayout(red, BoxLayout.Y_AXIS));
-                red.add(new JLabel());
-                redFields[i] = new JTextField(20);
-                redFields[i].setBackground(scoreText);
-                redFields[i].setEditable(false);
-                redFields[i].setText("");
-                red.add(redFields[i]);
-                red.add(Box.createRigidArea(new Dimension(0, 0)));
+                panelBaseArray(red, "", scoreText, redFields[i]);
             }
         }
         panelBase(red, "", redText, 20);
@@ -187,15 +189,7 @@ class Gui {
             blueFields[i] = new JTextField(20);
             boolean inBounds = (i >= 0) && (i < blueTeam.size());
             if (!inBounds) {
-                blue.setBackground(BACKGROUND);
-                blue.setLayout(new BoxLayout(blue, BoxLayout.Y_AXIS));
-                blue.add(new JLabel());
-                blueFields[i] = new JTextField(20);
-                blueFields[i].setBackground(scoreText);
-                blueFields[i].setEditable(false);
-                blueFields[i].setText("");
-                blue.add(blueFields[i]);
-                blue.add(Box.createRigidArea(new Dimension(0, 0)));
+                panelBaseArray(blue, "", scoreText, blueFields[i]);
             }
         }
         panelBase(blue, "", blueText, 20);
@@ -404,8 +398,10 @@ class Gui {
         JPanel blue = new JPanel();
 
         //Displays score for red team
+        JTextField[] redScores = new JTextField[15];
         panelBase(redPanel, "Red Score", redText, 8);
         for (int i = 0; i < 15; i++) {
+            redScores[i] = new JTextField(8);
             panelBase(redPanel, "", scoreText, 8);
         }
         panelBase(redPanel, "", redText, 8);
@@ -433,8 +429,10 @@ class Gui {
         action.add(red, gbc);
 
         //Displays score for blue team
-        panelBase(bluePanel, "Blue Score", blueText, 8);
+        JTextField[] blueScores = new JTextField[15];
+        panelBase(bluePanel, "Red Score", blueText, 8);
         for (int i = 0; i < 15; i++) {
+            blueScores[i] = new JTextField(8);
             panelBase(bluePanel, "", scoreText, 8);
         }
         panelBase(bluePanel, "", blueText, 8);
