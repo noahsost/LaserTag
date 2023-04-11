@@ -43,9 +43,13 @@ class Gui {
     List<Player> blueTeam = new ArrayList<Player>();
     Action f5 = new F5();
 
-    Gui(JFrame aFrame, Database aDatabase){
+    boolean isGameStart = false;
+    Server server;
+
+    Gui(JFrame aFrame, Database aDatabase, Server aServer){
         frame = aFrame;
         database = aDatabase;
+        server = aServer;
     }
 
     void playMusic(){
@@ -489,6 +493,11 @@ class Gui {
         //Sets timer
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
+                // grabs data from action log everytime timer ticks
+                // if no data, returns null
+                if(isGameStart){
+                    System.out.println(server.pollActionLog());
+                }
                 //interval--;
                 int second;
                 int minute;
@@ -507,7 +516,10 @@ class Gui {
     Integer setInterval1(JTextArea text)
     {
         if(interval <= 0)
-        {
+        {  
+            isGameStart = true;
+            server.isAcceptingData = true;
+
             text.setText("   Time remaining: ");
             if(first == 1) {
                 interval = 360;

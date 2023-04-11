@@ -8,6 +8,7 @@ public class Server extends Thread {
     private byte[] receive = new byte[65535];
     private DatagramPacket packet;
     private Queue<String> actionLog = new LinkedList<String>();
+    boolean isAcceptingData = false;
     BroadcastClient client;
 
     public Server(){
@@ -27,23 +28,25 @@ public class Server extends Thread {
     public void run(){
         boolean isRunning = true;
         while(isRunning){
+            
             packet = new DatagramPacket(receive, receive.length);
             
-            try{
-                socket.receive(packet);
-                String receivedPacket = data(receive).toString();
-                actionLog.add(receivedPacket);
-                client.send(getHitPlayerID(receivedPacket));
-            }
-            catch(Exception e){
-                System.out.println("Error receiving packet");
-            }
+            if(isAcceptingData){
+                try{
+                    socket.receive(packet);
+                    String receivedPacket = data(receive).toString();
+                    actionLog.add(receivedPacket);
+                    client.send(getHitPlayerID(receivedPacket));
+                }
+                catch(Exception e){
+                    System.out.println("Error receiving packet");
+                }
 
-            if(data(receive).toString().equals("bye")){
-                System.out.println("Server Exit");
-                isRunning = false;
+                if(data(receive).toString().equals("bye")){
+                    System.out.println("Server Exit");
+                    isRunning = false;
+                }
             }
-
             // flush buffer
             receive = new byte[65535];
         }

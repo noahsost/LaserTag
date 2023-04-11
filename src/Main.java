@@ -16,7 +16,7 @@ public class Main extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(new Color(200, 200, 200));
         this.setLayout(new GridBagLayout());
-        gui = new Gui(this, database);
+        gui = new Gui(this, database, server);
         gui.run(); 
         server.run();
     }
