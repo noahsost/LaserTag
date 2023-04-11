@@ -1,15 +1,21 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Server extends Thread {
     private DatagramSocket socket;
     private byte[] receive = new byte[65535];
     private DatagramPacket packet;
-    private List<String> log = new ArrayList<String>();
+    private Queue<String> actionLog = new LinkedList<String>();
+    BroadcastClient client;
 
     public Server(){
+        this.initializeSocket();
+        client = new BroadcastClient();
+    }
+
+    private void initializeSocket(){
         try{
             socket = new DatagramSocket(7501);
         }
@@ -25,8 +31,9 @@ public class Server extends Thread {
             
             try{
                 socket.receive(packet);
-
-                log.add(data(receive).toString());
+                String receivedPacket = data(receive).toString();
+                actionLog.add(receivedPacket);
+                client.send(getHitPlayerID(receivedPacket));
             }
             catch(Exception e){
                 System.out.println("Error receiving packet");
@@ -40,6 +47,12 @@ public class Server extends Thread {
             // flush buffer
             receive = new byte[65535];
         }
+    }
+
+    private String getHitPlayerID(String receivedString){
+        
+        String[] decodedStringArray = receivedString.split(":", 2);
+        return decodedStringArray[1];
     }
 
     public static StringBuilder data(byte[] a)
@@ -56,12 +69,9 @@ public class Server extends Thread {
 		return newString;
 	}
 
-    public List<String> getLog(){
-        return this.log;
+    // returns and removes head of actionLog
+    public String pollActionLog(){
+        return actionLog.poll();
     }
-
-    public void clearLog(){
-        this.log.clear();
-    }
-
+    
 }
