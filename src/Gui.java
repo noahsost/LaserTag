@@ -47,7 +47,7 @@ class Gui {
     Color redText = new Color(210, 96, 96);
     Color blueText = new Color(79, 138, 196);
     Color scoreText = new Color(255, 255, 255);
-    int interval = 0;
+    int interval = 30;
     Timer timer;
     int first = 1;
     List<Player> redTeam = new ArrayList<Player>();
