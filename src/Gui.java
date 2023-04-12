@@ -35,6 +35,8 @@ class Gui {
     int songNum = rand.nextInt(7)+1;
     private String pathToClip = "../resources/LaserTagTracks/Track0"+songNum+".wav";
     private Clip clip;
+    private int redTeamScore;
+    private int blueTeamScore;
     Color BACKGROUND = new Color(200, 200, 200);
     Color redText = new Color(210, 96, 96);
     Color blueText = new Color(79, 138, 196);
@@ -500,7 +502,39 @@ class Gui {
                 // grabs data from action log everytime timer ticks
                 // if no data, returns null
                 if(isGameStart){
-                    System.out.println(server.pollActionLog());
+                    String event = server.pollActionLog();
+                    if(event != null){
+                        String[] decodedStringArray = event.split(":", 2);
+                        String transmittingPlayer = decodedStringArray[0];
+                        
+                        System.out.println(event);
+
+                        Boolean isFound = false;
+                        for(int i = 0; i < redTeam.size(); i++){
+                            Player aPlayer = redTeam.get(i);
+                            if(aPlayer.getID() == Integer.parseInt(transmittingPlayer)){
+                                aPlayer.updateScore();
+                                redTeamScore += 10;
+                                //debug
+                                System.out.println("Player Score: " + aPlayer.getScore());
+                                System.out.println("Team Score: " + redTeamScore);
+                            }
+                        }
+                        if(!isFound){
+                            for(int i = 0; i < blueTeam.size(); i++){
+                                Player aPlayer = blueTeam.get(i);
+                                if(aPlayer.getID() == Integer.parseInt(transmittingPlayer)){
+                                    aPlayer.updateScore();
+                                    blueTeamScore += 10;
+                                    //debug
+                                    System.out.println("Player Score:" + aPlayer.getScore());
+                                    System.out.println("Team Score: " + blueTeamScore);
+                                }
+                            }
+                        }
+                        
+                    }
+
                 }
                 //interval--;
                 int second;
