@@ -19,9 +19,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.text.DefaultCaret;
 import javax.swing.JComponent;
 import java.io.*;
 import java.util.Random;
@@ -37,11 +39,15 @@ class Gui {
     private Clip clip;
     private int redTeamScore;
     private int blueTeamScore;
+    JTextField[] redScores = new JTextField[15];
+    JTextField[] blueScores = new JTextField[15];
+    JTextField totalRedScore = new JTextField();
+    JTextField totalBlueScore = new JTextField();
     Color BACKGROUND = new Color(200, 200, 200);
     Color redText = new Color(210, 96, 96);
     Color blueText = new Color(79, 138, 196);
     Color scoreText = new Color(255, 255, 255);
-    int interval = 30;
+    int interval = 0;
     Timer timer;
     int first = 1;
     List<Player> redTeam = new ArrayList<Player>();
@@ -110,12 +116,13 @@ class Gui {
         panel.add(Box.createRigidArea(new Dimension(0, 0)));
     }
 
-    void panelBaseArray(JPanel panel, String input, Color color, JTextField textField) {
+    void panelBaseField(JPanel panel, String input, Color color, JTextField textField) {
         panel.setBackground(BACKGROUND);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(new JLabel());
         textField.setBackground(color);
         textField.setEditable(false);
+        textField.setText(input);
         panel.add(textField);
         panel.add(Box.createRigidArea(new Dimension(0, 0)));
     }
@@ -182,7 +189,7 @@ class Gui {
             redFields[i] = new JTextField(20);
             boolean inBounds = (i >= 0) && (i < redTeam.size());
             if (!inBounds) {
-                panelBaseArray(red, "", scoreText, redFields[i]);
+                panelBaseField(red, "", scoreText, redFields[i]);
             }
         }
         panelBase(red, "", redText, 20);
@@ -199,7 +206,7 @@ class Gui {
             blueFields[i] = new JTextField(20);
             boolean inBounds = (i >= 0) && (i < blueTeam.size());
             if (!inBounds) {
-                panelBaseArray(blue, "", scoreText, blueFields[i]);
+                panelBaseField(blue, "", scoreText, blueFields[i]);
             }
         }
         panelBase(blue, "", blueText, 20);
@@ -408,13 +415,12 @@ class Gui {
         JPanel blue = new JPanel();
 
         //Displays score for red team
-        JTextField[] redScores = new JTextField[15];
         panelBase(redPanel, "Red Score", redText, 8);
         for (int i = 0; i < 15; i++) {
             redScores[i] = new JTextField(8);
-            panelBase(redPanel, "", scoreText, 8);
+            panelBaseField(redPanel, "", scoreText, redScores[i]);
         }
-        panelBase(redPanel, "", redText, 8);
+        panelBaseField(redPanel, "", redText, totalRedScore);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
@@ -439,13 +445,12 @@ class Gui {
         action.add(red, gbc);
 
         //Displays score for blue team
-        JTextField[] blueScores = new JTextField[15];
-        panelBase(bluePanel, "Red Score", blueText, 8);
+        panelBase(bluePanel, "Blue Score", blueText, 8);
         for (int i = 0; i < 15; i++) {
             blueScores[i] = new JTextField(8);
-            panelBase(bluePanel, "", scoreText, 8);
+            panelBaseField(bluePanel, "", scoreText, blueScores[i]);
         }
-        panelBase(bluePanel, "", blueText, 8);
+        panelBaseField(bluePanel, "", blueText, totalBlueScore);
         gbc.gridx = 3;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
@@ -468,6 +473,20 @@ class Gui {
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.CENTER;
         action.add(blue, gbc);
+
+        //Message box for player actions
+        JTextArea messageBox = new JTextArea(5, 1);
+        JScrollPane scroll = new JScrollPane(messageBox);
+        DefaultCaret caret = (DefaultCaret)messageBox.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        messageBox.setEditable(false);
+        action.add(scroll, gbc);
 
         //Says when the game is starting
         JTextArea gameStartText = new JTextArea(1, 10);
@@ -506,6 +525,11 @@ class Gui {
                     if(event != null){
                         String[] decodedStringArray = event.split(":", 2);
                         String transmittingPlayer = decodedStringArray[0];
+                        String recievingPlayer = decodedStringArray[1];
+                        Player shot = database.getExistingPlayer(Integer.parseInt(transmittingPlayer));
+                        Player gotShot = database.getExistingPlayer(Integer.parseInt(recievingPlayer));
+                        String shotName = shot.getCodeName();
+                        String gotShotName = gotShot.getCodeName();
                         
                         System.out.println(event);
 
@@ -515,6 +539,8 @@ class Gui {
                             if(aPlayer.getID() == Integer.parseInt(transmittingPlayer)){
                                 aPlayer.updateScore();
                                 redTeamScore += 10;
+                                redScores[i].setText(String.valueOf(aPlayer.getScore()));
+                                totalRedScore.setText(String.valueOf(redTeamScore));
                                 //debug
                                 System.out.println("Player Score: " + aPlayer.getScore());
                                 System.out.println("Team Score: " + redTeamScore);
@@ -526,13 +552,15 @@ class Gui {
                                 if(aPlayer.getID() == Integer.parseInt(transmittingPlayer)){
                                     aPlayer.updateScore();
                                     blueTeamScore += 10;
+                                    blueScores[i].setText(String.valueOf(aPlayer.getScore()));
+                                    totalBlueScore.setText(String.valueOf(blueTeamScore));
                                     //debug
                                     System.out.println("Player Score:" + aPlayer.getScore());
                                     System.out.println("Team Score: " + blueTeamScore);
                                 }
                             }
                         }
-                        
+                        messageBox.append(shotName + " has hit " + gotShotName + "\n");
                     }
 
                 }

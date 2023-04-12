@@ -53,7 +53,6 @@ public class Server extends Thread {
     }
 
     private String getHitPlayerID(String receivedString){
-        
         String[] decodedStringArray = receivedString.split(":", 2);
         return decodedStringArray[1];
     }
