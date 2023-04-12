@@ -24,13 +24,16 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.JComponent;
 import java.io.*;
+import java.util.Random;
 
 import javax.sound.sampled.*;
 
 class Gui {
     JFrame frame;
     Database database;
-    private String pathToClip = "C:/Users/Spencer/Documents/GitHub/LaserTag/src/wav_files/hal.wav";
+    Random rand = new Random();
+    int songNum = rand.nextInt(7)+1;
+    private String pathToClip = "../resources/LaserTagTracks/Track0"+songNum+".wav";
     private Clip clip;
     Color BACKGROUND = new Color(200, 200, 200);
     Color redText = new Color(210, 96, 96);
@@ -42,6 +45,7 @@ class Gui {
     List<Player> redTeam = new ArrayList<Player>();
     List<Player> blueTeam = new ArrayList<Player>();
     Action f5 = new F5();
+    
 
     boolean isGameStart = false;
     Server server;
@@ -524,6 +528,7 @@ class Gui {
             if(first == 1) {
                 interval = 360;
                 first = 0;
+                this.playMusic();
             } else {
             timer.cancel();
             } 
@@ -536,7 +541,6 @@ class Gui {
     }
 
     void run(){
-        //this.playMusic();
         this.splashScreen();
         this.playerEntry();
         this.addNewPlayer();
