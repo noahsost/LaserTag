@@ -47,7 +47,7 @@ class Gui {
     Color redText = new Color(210, 96, 96);
     Color blueText = new Color(79, 138, 196);
     Color scoreText = new Color(255, 255, 255);
-    int interval = 30;
+    int interval = 0;
     Timer timer;
     int first = 1;
     List<Player> redTeam = new ArrayList<Player>();
@@ -562,8 +562,31 @@ class Gui {
                         }
                         messageBox.append(shotName + " has hit " + gotShotName + "\n");
                     }
-
+                    //High score flashes
+                    if (redTeamScore > blueTeamScore) {
+                        totalBlueScore.setBackground(blueText);
+                        try {
+                            totalRedScore.setBackground(new Color(255, 255, 255));
+                            Thread.sleep(500);
+                            totalRedScore.setBackground(redText);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (blueTeamScore > redTeamScore) {
+                        totalRedScore.setBackground(redText);
+                        try {
+                            totalBlueScore.setBackground(new Color(255, 255, 255));
+                            Thread.sleep(500);
+                            totalBlueScore.setBackground(blueText);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        totalRedScore.setBackground(redText);
+                        totalBlueScore.setBackground(blueText);
+                    }
                 }
+
                 //interval--;
                 int second;
                 int minute;
