@@ -331,38 +331,66 @@ class Gui {
 	}
 
     void addNewPlayer(){
-        // creates new jPanel underneath start button
         JPanel panel = new JPanel();
+        GridBagLayout NP = new GridBagLayout();
+        GridBagConstraints playerNew = new GridBagConstraints();
         panel.setBackground(BACKGROUND);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(NP);
 
-        JLabel iDLabel = new JLabel("ID:");
-    
+        JLabel iDLabel = new JLabel("ID: ");
+        playerNew.gridx = 0;
+        playerNew.gridy = 0;
+        NP.setConstraints(iDLabel, playerNew);
         panel.add(iDLabel);
-        JTextField newIDField = new JTextField(20);
+
+        JTextField newIDField = new JTextField(15);
+        playerNew.gridx = 1;
+        playerNew.gridy = 0;
+        NP.setConstraints(newIDField, playerNew);
         panel.add(newIDField);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        JLabel first = new JLabel("First Name: ");
+        playerNew.gridx = 0;
+        playerNew.gridy = 1;
+        NP.setConstraints(first, playerNew);
+        panel.add(first);
 
-        panel.add(new JLabel("First Name:"));
-        JTextField newFirstNameField = new JTextField(20);
+        JTextField newFirstNameField = new JTextField(15);
+        playerNew.gridx = 1;
+        playerNew.gridy = 1;
+        NP.setConstraints(newFirstNameField, playerNew);
         panel.add(newFirstNameField);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        panel.add(new JLabel("Last Name:"));
-        JTextField newLastNameField = new JTextField(20);
+        JLabel last = new JLabel("Last Name: ");
+        playerNew.gridx = 0;
+        playerNew.gridy = 2;
+        NP.setConstraints(last, playerNew);
+        panel.add(last);
+        
+        JTextField newLastNameField = new JTextField(15);
+        playerNew.gridx = 1;
+        playerNew.gridy = 2;
+        NP.setConstraints(newLastNameField, playerNew);
         panel.add(newLastNameField);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        JLabel codename = new JLabel("Codename:");
+        playerNew.gridx = 0;
+        playerNew.gridy = 3;
+        NP.setConstraints(codename, playerNew);
+        panel.add(codename);
 
-        panel.add(new JLabel("Codename:"));
-        JTextField newCodeNameField = new JTextField(20);
+        JTextField newCodeNameField = new JTextField(15);
+        playerNew.gridx = 1;
+        playerNew.gridy = 3;
+        NP.setConstraints(newCodeNameField, playerNew);
         panel.add(newCodeNameField);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
-
         JButton addNewPlayerButton = new JButton("Add New Player");
+        playerNew.fill = GridBagConstraints.HORIZONTAL;
+        playerNew.gridx = 0;
+        playerNew.gridy = 4;
+        playerNew.gridwidth = 2;
+        NP.setConstraints(addNewPlayerButton, playerNew);
         panel.add(addNewPlayerButton);
 
         // adds jpanel to the jframe
@@ -372,9 +400,8 @@ class Gui {
         gbc.gridwidth = 2;
 
         this.frame.add(panel, gbc);
-        
         this.frame.setVisible(true);
-
+        
         // action listener for add new player button
         addNewPlayerButton.addActionListener(new ActionListener(){
             @Override
